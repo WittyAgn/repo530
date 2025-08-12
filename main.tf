@@ -18,6 +18,11 @@ resource "azurerm_resource_group" "rg" {
   location = "West Europe"
 }
 
+resource "azurerm_resource_group" "rx" {
+  name     = "rg-resources1"
+  location = "West Europe"
+}
+
 resource "azurerm_storage_account" "sardl" {
   name                     = "stoage92"
   resource_group_name      = "rg-resources3"
