@@ -1,0 +1,57 @@
+pool: kpool
+trigger:
+  branches:
+    include:
+      - main
+      - kbranch
+variables:
+  workdir: 'C:\Devops\pipelinepractice\warepo\repo530\vsts-agent-win-x64-4.259.0(2)\_work\1\s'
+  azbaarm:  'newfedcon'
+steps:
+
+
+- task: PowerShell@2
+  displayName: 'Powershell task'
+  inputs:
+    targetType: 'inline'
+    script: 'Write-Host "Hello World"'
+
+#- task: PowerShell@2
+#  displayName: 'Azurelogin'
+#  inputs:
+#    targetType: 'inline'
+#    script: 'az login'
+
+- task: TerraformTask@5
+  displayName: 'Terraform Init'
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    workingDirectory: '$(workdir)'
+    backendServiceArm: '$(azbaarm)'
+    backendAzureRmResourceGroupName: 'reg1'
+    backendAzureRmStorageAccountName: 'stornew420'
+    backendAzureRmContainerName: 'newcont'
+    backendAzureRmKey: 'def.tfstate'
+
+- task: TerraformTask@5
+  displayName: 'Terraform Plan'
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    workingDirectory: '$(workdir)'
+    environmentServiceNameAzureRM: '$(azbaarm)'
+
+- task: TerraformTask@5
+  displayName: 'Terraform Apply'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+    workingDirectory: '$(workdir)'
+    commandOptions: '-auto-approve'
+    environmentServiceNameAzureRM: '$(azbaarm)'
+
+    
+
+
