@@ -1,7 +1,11 @@
 pool: kpool
-trigger: none
+trigger:
+  branches:
+    include:
+      - main
+      - kbranch
 variables:
-  workdir: 'C:\Devops\pipelinepractice\warepo\repo530\vsts-agent-win-x64-4.259.0(2)'
+  workdir: 'C:\Devops\pipelinepractice\warepo\repo530\vsts-agent-win-x64-4.259.0(2)\_work\1\s'
   azbaarm:  'newfedcon'
 steps:
 
@@ -38,14 +42,15 @@ steps:
     workingDirectory: '$(workdir)'
     environmentServiceNameAzureRM: '$(azbaarm)'
 
-#- task: TerraformTask@5
-#  displayName: 'Terraform Apply'
-#  inputs:
-#    provider: 'azurerm'
-#    command: 'apply'
-#    workingDirectory: '$(workdir)'
-#    commandOptions: '-auto-approve'
-#    environmentServiceNameAzureRM: '$(azbaarm)'
+- task: TerraformTask@5
+  displayName: 'Terraform Apply'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+    workingDirectory: '$(workdir)'
+    commandOptions: '-auto-approve'
+    environmentServiceNameAzureRM: '$(azbaarm)'
 
     
 
