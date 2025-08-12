@@ -1,4 +1,4 @@
-pool: Wittyagent
+pool: kpool
 trigger: none
 variables:
   workdir: 'C:\Devops\pipelinepractice\warepo\repo530\vsts-agent-win-x64-4.259.0(2)'
